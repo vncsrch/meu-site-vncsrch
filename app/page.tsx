@@ -835,7 +835,12 @@ export default function Page() {
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             {PROJECTS.map((p, i) => (
               <BlurFade key={p.title} delay={0.1 * i} inView className="h-full">
-                <MagicCard className="h-full rounded-lg border border-[#00ff41]/20 bg-black/70" gradientColor="#073d1a">
+                <MagicCard
+                  className="h-full rounded-lg border border-[#00ff41]/20 [--color-background:#030b06]"
+                  gradientColor="#073d1a"
+                  gradientFrom="#00ff41"
+                  gradientTo="#00b32c"
+                >
                   <div className="flex h-full flex-col p-5">
                     <Mock kind={p.mock} cmd={p.cmd} />
                     <h3 className="mt-5 text-lg font-medium text-[#e6ffec]">{p.title}</h3>
