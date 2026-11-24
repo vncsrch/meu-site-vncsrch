@@ -15,8 +15,8 @@ import { WordRotate } from "@/components/ui/word-rotate";
 /* ---------- EDITE AQUI: textos e contatos ---------- */
 const SITE = {
   name: "VNCSRCH",
-  email: "contato@seudominio.com",
-  whatsapp: "https://wa.me/5500000000000",
+  email: "set.cabecas@gmail.com",
+  whatsapp: "https://wa.me/5563992169999",
   message: "Olá! Vim pelo site VNCSRCH e quero conversar sobre um projeto.",
 };
 
@@ -48,6 +48,8 @@ const STACK = ["Next.js", "React", "TypeScript", "Tailwind CSS", "Node.js", "Int
 /* --------------------------------------------------- */
 
 const GLYPHS = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ0123456789<>/{}[]=+*#$%".split("");
+const SCRAMBLE = "0123456789ABCDEF#$%&*+=<>".split("");
+const rndSafe = () => SCRAMBLE[(Math.random() * SCRAMBLE.length) | 0];
 const rnd = () => GLYPHS[(Math.random() * GLYPHS.length) | 0];
 
 const go = (id: string) =>
@@ -116,7 +118,7 @@ function MatrixRain({ calm }: { calm: boolean }) {
     };
 
     const paint = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       w = window.innerWidth;
       h = window.innerHeight;
       canvas.width = w * dpr;
@@ -146,8 +148,16 @@ function MatrixRain({ calm }: { calm: boolean }) {
       tick();
     };
 
+    let lastW = window.innerWidth, lastH = window.innerHeight;
+    const onResize = () => {
+      const nw = window.innerWidth, nh = window.innerHeight;
+      if (nw === lastW && Math.abs(nh - lastH) < 150) return;
+      lastW = nw; lastH = nh;
+      paint();
+    };
+
     paint();
-    window.addEventListener("resize", paint);
+    window.addEventListener("resize", onResize);
     if (!calm) {
       window.addEventListener("pointermove", move);
       window.addEventListener("pointerdown", down);
@@ -157,7 +167,7 @@ function MatrixRain({ calm }: { calm: boolean }) {
     }
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", paint);
+      window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerdown", down);
       window.removeEventListener("scroll", scroll);
@@ -191,6 +201,7 @@ function Decode({ text, className = "" }: { text: string; className?: string }) 
   const [out, setOut] = useState(text);
   const el = useRef<HTMLSpanElement>(null);
   const timer = useRef(0);
+  const armed = useRef(true);
 
   const run = useCallback(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -198,7 +209,7 @@ function Decode({ text, className = "" }: { text: string; className?: string }) 
     let frame = 0;
     timer.current = window.setInterval(() => {
       frame++;
-      setOut(text.split("").map((c, i) => (c === " " || i < frame / 2 ? c : rnd())).join(""));
+      setOut(text.split("").map((c, i) => (c === " " || i < frame / 2 ? c : rndSafe())).join(""));
       if (frame / 2 >= text.length) {
         window.clearInterval(timer.current);
         setOut(text);
@@ -223,7 +234,12 @@ function Decode({ text, className = "" }: { text: string; className?: string }) 
   }, [run]);
 
   return (
-    <span ref={el} onMouseEnter={run} className={className}>
+    <span
+      ref={el}
+      onMouseEnter={() => { if (armed.current) { armed.current = false; run(); } }}
+      onMouseLeave={() => { armed.current = true; }}
+      className={className}
+    >
       <span className="sr-only">{text}</span>
       <span aria-hidden>{out}</span>
     </span>
@@ -321,7 +337,7 @@ function TerminalDemo() {
   const elapsed = stepIdx < 0 ? 0 : Math.min(s, JOB.length * STEP_TICKS) * 0.08;
 
   return (
-    <div ref={ref} className="overflow-hidden rounded-lg border border-[#00ff41]/25 bg-black/80 backdrop-blur-sm">
+    <div ref={ref} className="overflow-hidden rounded-lg border border-[#00ff41]/25 bg-black/85">
       <p className="sr-only">
         Exemplo animado: um relatório semanal é gerado e enviado automaticamente por e-mail e WhatsApp.
       </p>
@@ -692,7 +708,7 @@ function Hud() {
         aria-valuenow={xp}
         aria-valuemin={0}
         aria-valuemax={100}
-        className="pointer-events-none fixed inset-x-0 top-0 z-50 border-b border-[#00ff41]/20 bg-black/70 backdrop-blur-md"
+        className="pointer-events-none fixed inset-x-0 top-0 z-50 border-b border-[#00ff41]/20 bg-black/85"
       >
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-1.5 text-[11px] tracking-widest text-[#00ff41] sm:text-xs">
           <span>NÍVEL {pad(level + 1)}/{pad(LEVELS.length)} &gt; {LEVELS[level].name.toUpperCase()}</span>
@@ -783,7 +799,7 @@ export default function Page() {
         {/* Serviços */}
         <section id="servicos" className="mx-auto w-full max-w-5xl scroll-mt-16 px-5 py-14 md:py-20">
           <Heading title="Serviços" text="Sites e automações, do primeiro rascunho até funcionar no dia a dia." />
-          <ul className="mt-10 divide-y divide-[#00ff41]/15 border-y border-[#00ff41]/15 bg-black/60 backdrop-blur-sm">
+          <ul className="mt-10 divide-y divide-[#00ff41]/15 border-y border-[#00ff41]/15 bg-black/75">
             {SERVICES.map((s, i) => {
               const Icon = s.icon;
               return (
@@ -858,7 +874,7 @@ export default function Page() {
         {/* Contato */}
         <section id="contato" className="mx-auto w-full max-w-5xl scroll-mt-16 px-5 py-14 md:py-20">
           <BlurFade inView>
-            <div className="relative overflow-hidden rounded-lg border border-[#00ff41]/25 bg-black/70 p-8 text-center backdrop-blur-sm md:p-14">
+            <div className="relative overflow-hidden rounded-lg border border-[#00ff41]/25 bg-black/80 p-8 text-center md:p-14">
               <h2 className="text-balance text-3xl font-semibold tracking-tight text-[#e6ffec] sm:text-4xl">
                 <Decode text="Vamos tirar a sua ideia do papel?" />
               </h2>
