@@ -17,7 +17,7 @@ const SITE = {
   name: "VNCSRCH",
   email: "set.cabecas@gmail.com",
   whatsapp: "https://wa.me/5563992169999",
-  message: "Olá! Vim pelo site VNCSRCH e quero conversar sobre um projeto.",
+  message: "Olá! Vi o site da VNCSRCH e quero conversar sobre um projeto. Pode me ajudar?",
 };
 
 const MANIFESTO =
